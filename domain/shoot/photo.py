@@ -41,7 +41,10 @@ async def save_photos(req: ImageUploadRequest):
             prompts.append(prompt)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    return {"saved_paths": saved_paths}
+    return {
+        "saved_paths": saved_paths,
+        "prompts": prompts
+        }
 
 def get_date(date: str) -> int:
     files = os.listdir(UPLOAD_DIR)
