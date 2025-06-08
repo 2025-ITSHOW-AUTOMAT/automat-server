@@ -2,3 +2,9 @@ uploads/
 
 __pycache__/
 *.py[cod]
+
+.env
+
+.idea/
+
+test/
