@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from domain.shoot import photo
 from fastapi.middleware.cors import CORSMiddleware
 
+load_dotenv()
 
 app = FastAPI()
 app.include_router(photo.router, prefix="/photo")

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
-from domain.prompt.prompt import generate_prompt
+from domain.prompt.prompt import generate_prompt, prompt_openai
 import base64
 import os
 
@@ -39,12 +39,20 @@ async def save_photos(req: ImageUploadRequest):
         for path in temp_paths:
             prompt = generate_prompt(path)
             prompts.append(prompt)
+
+        merged_prompt = " ".join(prompts)
+        song_prompt, genre = prompt_openai(merged_prompt)
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
     return {
         "saved_paths": saved_paths,
-        "prompts": prompts
-        }
+        "prompts": prompts,
+        "song_prompt": song_prompt,
+        "genre": genre
+    }
+
 
 def get_date(date: str) -> int:
     files = os.listdir(UPLOAD_DIR)
