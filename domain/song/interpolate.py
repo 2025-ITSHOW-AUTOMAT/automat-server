@@ -1,6 +1,7 @@
 import torch
 from diffusers import StableDiffusionPipeline
-from riffusion.spectro import spectro_to_wav
+from domain.song.utils.spectro import spectro_to_wav
+
 from PIL import Image
 import base64
 from typing import List
@@ -32,10 +33,10 @@ def generate_interpolated_audio(prompts: List[str], num_steps: int = 5) -> bytes
         combined.paste(img, (x_offset, 0))
         x_offset += img.width
 
-    # WAV 파일 변환
+    # WAV 파일로 변환
     wavs = spectro_to_wav(combined)
     return wavs[0].getvalue()
 
-def generate_base64_audio(prompts: List[str], steps: int = 5) -> str:
+def generate_audio(prompts: List[str], steps: int = 5) -> str:
     audio_bytes = generate_interpolated_audio(prompts, steps)
     return base64.b64encode(audio_bytes).decode("utf-8")
