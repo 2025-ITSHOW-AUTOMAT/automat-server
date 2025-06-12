@@ -1,10 +1,12 @@
 from typing import final
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket, Request
 from deepface import DeepFace
 import numpy as np
 import cv2
 import base64
 import asyncio
+import os
+import uuid
 
 router = APIRouter()
 
@@ -52,3 +54,23 @@ async def ws_emotion(websocket : WebSocket):
             print(f"error : {e}")
             break
 
+
+@router.post("/upload")
+async def upload_cover(request: Request):
+    data = await request.json()
+    image_data = data.get("image")
+
+    # base64 디코딩
+    header, encoded = image_data.split(",", 1)
+    binary_data = base64.b64decode(encoded)
+
+    current_dir = os.path.dirname(__file__)
+    save_dir = os.path.abspath(os.path.join(current_dir, "../..", "uploads/coverImage"))
+    os.makedirs(save_dir, exist_ok=True)
+
+    save_path = os.path.join(save_dir, f"{uuid.uuid4().hex[:8]}.png")
+
+    with open(save_path, "wb") as f:
+        f.write(binary_data)
+
+    return {"message": "커버 저장 성공", "path": save_path}
