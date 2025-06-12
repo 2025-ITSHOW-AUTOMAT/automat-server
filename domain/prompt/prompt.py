@@ -48,34 +48,41 @@ def generate_prompt(image_path) -> str:
 #         )
 #         content = response.choices[0].message.content.strip()
 
-#         genre = None
-#         if "genre:" in content.lower():
-#             parts = content.lower().split("genre:")
-#             genre = parts[1].strip()
+#         song_genre = None
+#         if "song_genre:" in content.lower():
+#             parts = content.lower().split("song_genre:")
+#             song_genre = parts[1].strip()
 #             song_prompt = parts[0].strip()
 #         else:
 #             song_prompt = content
         
-#         song_prompts.append(song_prompt)
-#         genres.append(genre)
+#         if song_genre:
+#             full_prompt = f"{song_genre} style music, {song_prompt}"
+#         else:
+#             full_prompt = song_prompt
+        
+#         song_prompts.append(full_prompt)
+#         if song_genre:
+#             genres.append(song_genre)
+
+#         genres.append(song_genre)
 #     filtered_genres = [g for g in genres if g]
 #     if filtered_genres:
 #         genre_counter = Counter(filtered_genres)
-#         main_genre = genre_counter.most_common(1)[0][0]
+#         genre = genre_counter.most_common(1)[0][0]
 #     else:
-#         main_genre = "pop"
+#         genre = "pop"
 
-#     return song_prompts, main_genre
+#     return song_prompts, genre
 
 def prompt_openai(base_prompts: list): # 테스트용 코드(나중에 지울 것)
-    song_prompt = (
-        "A joyful and uplifting lo-fi beat capturing the innocence and fun of childhood.",
-        "A soothing ambient track with gentle synths and soft piano, evoking peace and reflection.",
-        "A dark and moody electronic tune with pulsing bass, reflecting solitude and tension."
-    )
-    genre = "lo-fi hip hop"
+    song_prompt = [
+        "lo-fi hip hop style music, A joyful and uplifting lo-fi beat capturing the innocence and fun of childhood.",
+        "lo-fi hip hop style music, A soothing ambient track with gentle synths and soft piano, evoking peace and reflection.",
+        "lo-fi hip hop style music, A dark and moody electronic tune with pulsing bass, reflecting solitude and tension."
+    ]
     
-    return song_prompt, genre
+    return song_prompt
 
     
 @router.get("/generate/song_prompt")
@@ -86,12 +93,11 @@ def generate_song_prompt(image_path: list[str]):
 
     try:
         base_prompts = [generate_prompt(p) for p in image_path]
-        song_prompts, genre = prompt_openai(base_prompts)
+        song_prompts = prompt_openai(base_prompts)
 
         return {
             "base_prompts": base_prompts,
-            "song_prompts": song_prompts,
-            "genre": genre
+            "song_prompts": song_prompts
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

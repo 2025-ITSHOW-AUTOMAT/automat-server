@@ -21,6 +21,6 @@ def spectro_to_wav(image: Image.Image) -> bytes:
     )
 
     buffer = io.BytesIO()
-    sf.write(buffer, audio, 44100, format='WAV')
+    sf.write(buffer, audio, 44100, format='wav')
     buffer.seek(0)
     return buffer.read()
