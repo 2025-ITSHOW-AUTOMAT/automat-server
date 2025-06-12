@@ -41,7 +41,7 @@ async def save_photos(req: ImageUploadRequest):
             prompts.append(prompt)
 
         merged_prompt = " ".join(prompts)
-        song_prompt, genre = prompt_openai(merged_prompt)
+        song_prompt = prompt_openai(merged_prompt)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -49,10 +49,8 @@ async def save_photos(req: ImageUploadRequest):
     return {
         "saved_paths": saved_paths,
         "prompts": prompts,
-        "song_prompt": song_prompt,
-        "genre": genre
+        "song_prompt": song_prompt
     }
-
 
 def get_date(date: str) -> int:
     files = os.listdir(UPLOAD_DIR)
