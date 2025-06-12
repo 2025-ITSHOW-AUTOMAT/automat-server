@@ -1,34 +1,54 @@
 from typing import final
-
-import cv2
+from fastapi import APIRouter, WebSocket
 from deepface import DeepFace
+import numpy as np
+import cv2
+import base64
+import asyncio
 
-RED: final = '#FF0000'
-BLUE: final = '#0000FF'
-YELLOW: final = '#FFFF00'
-BLACK: final = '#000000'
+router = APIRouter()
 
-capture = cv2.VideoCapture(0)
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+emotion_color = {
+    "angry": "#f04800", # 빨강
+    "disgust": "#f04800", # 노랑
+    "fear": "#f0AC00", # 빨강
+    "happy": "#99ffbd", # 초록
+    "sad": "#00C8F0", # 파랑
+    "surprise": "#f0AC00", # 노랑
+    "neutral": "#000000", # 검정
+}
 
-while cv2.waitKey(33) < 0 :
-    ret, frame = capture.read()
+@router.websocket("/ws")
+async def ws_emotion(websocket : WebSocket):
+    await websocket.accept()
+    last_emotion = None
 
-    result = DeepFace.analyze(frame, actions=["emotion"], enforce_detection=False)
-    # enforce_detection=False : 얼굴이 감지되지 않아도 에러를 발생시키지 않기 위함
-    if result[0]['dominant_emotion'] == 'happy' :
-        print(RED)
-    elif result[0]['dominant_emotion'] == 'fear' :
-        print(BLUE)
-    elif result[0]['dominant_emotion'] == 'sad' :
-        print(YELLOW)
-    else :
-        print(BLACK)
+    while True:
+        try:
+            data = await websocket.receive_text()
 
-    cv2.imshow("VideoFrame", frame)
+            img_bytes = base64.b64decode(data)
+            np_arr = np.frombuffer(img_bytes, np.uint8) # 숫자 배열로 디코딩
+            img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
+            result = DeepFace.analyze(img, actions=["emotion"], enforce_detection=False)
+            # enforce_detection=False : 얼굴이 감지되지 않아도 에러를 발생시키지 않기 위함
+            emotion = result[0]['dominant_emotion']
 
+            if last_emotion != emotion:
+                last_emotion = emotion
+                color = emotion_color.get(emotion)
+                await websocket.send_json({
+                    "emotion" : emotion,
+                    "color" : color
+                })
+            else:
+                await websocket.send_json({
+                    "emotion": emotion,
+                    "color": None
+                })
 
-capture.release()
-cv2.destroyAllWindows()
+        except Exception as e:
+            print(f"error : {e}")
+            break
+
