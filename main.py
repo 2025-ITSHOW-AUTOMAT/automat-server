@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from domain.shoot import photo
 from domain.song import createSong
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 load_dotenv()
 

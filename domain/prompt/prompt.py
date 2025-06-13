@@ -26,16 +26,16 @@ def generate_prompt(image_path) -> str:
     prompt = f"A {emotion} scene: {caption}."
     return prompt
 
+from collections import Counter
+
 # def prompt_openai(base_prompts: list):
 #     song_prompts = []
-#     genres = []
     
-#     # 노래 생성을 위한 프롬프트
 #     system_message = "You generate music prompts with genre suggestions."
 #     for base_prompt in base_prompts:
 #         user_message = (
-#         f"Based on the following descriptions, create a song prompt that reflects the mood, atmosphere, and situation. "
-#         f"Also, specify the song genre at the end.\n\nDescriptions: {base_prompt}"
+#             f"Based on the following descriptions, create a song prompt that reflects the mood, atmosphere, and situation. "
+#             f"Also, specify the song genre at the end.\n\nDescriptions: {base_prompt}"
 #         )
 #         response = client.chat.completions.create(
 #             model="gpt-4o-mini",
@@ -55,25 +55,16 @@ def generate_prompt(image_path) -> str:
 #             song_prompt = parts[0].strip()
 #         else:
 #             song_prompt = content
-        
+#             song_genre = None
+
 #         if song_genre:
 #             full_prompt = f"{song_genre} style music, {song_prompt}"
 #         else:
 #             full_prompt = song_prompt
         
 #         song_prompts.append(full_prompt)
-#         if song_genre:
-#             genres.append(song_genre)
 
-#         genres.append(song_genre)
-#     filtered_genres = [g for g in genres if g]
-#     if filtered_genres:
-#         genre_counter = Counter(filtered_genres)
-#         genre = genre_counter.most_common(1)[0][0]
-#     else:
-#         genre = "pop"
-
-#     return song_prompts, genre
+#     return song_prompts
 
 def prompt_openai(base_prompts: list): # 테스트용 코드(나중에 지울 것)
     song_prompt = [
