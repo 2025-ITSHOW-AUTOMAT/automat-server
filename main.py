@@ -4,6 +4,7 @@ from domain.shoot import photo
 from domain.song import createSong
 from domain.emotion.emotion import router as emotion
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 load_dotenv()
 
