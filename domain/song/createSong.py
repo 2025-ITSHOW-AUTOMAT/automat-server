@@ -2,7 +2,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from domain.prompt.prompt import prompt_openai
 from domain.song.ace_step_wrapper import ACEWrapper
-from domain.song.utils.saveSong import song_path
+from domain.song.utils.saveSong import song_path, save_song
+from domain.song.utils.s3 import upload_s3
+
+import os
 
 router = APIRouter()
 wrapper = ACEWrapper()
@@ -30,10 +33,22 @@ def generate_song(req: SongRequest):
             infer_steps=req.infer_steps
         )
 
+        audio_local = result["audio_path"]
+        metadata_local = result["metadata_path"]
+
+        s3_audio_key = f"songs/{os.path.basename(audio_local)}"
+        s3_metadata_key = f"metadata/{os.path.basename(metadata_local)}"
+
+        s3_audio_url = upload_s3(audio_local, s3_audio_key)
+        s3_metadata_url = upload_s3(metadata_local, s3_metadata_key)
+
+        song_id = save_song(s3_audio_url)
+
         return {
             "message": "성공적으로 생성 완료",
-            "song_path": result["audio_path"].replace("\\", "/"),
-            "metadata_path": result["metadata_path"].replace("\\", "/")
+            "song_id": song_id,
+            "song_url": s3_audio_url,
+            "metadata_url": s3_metadata_url
         }
 
     except Exception as e:

@@ -3,10 +3,11 @@ import uuid
 from domain.song.ACE_Step.acestep.pipeline_ace_step import ACEStepPipeline
 from datetime import datetime
 
+
 class ACEWrapper:
     def __init__(
         self,
-        checkpoint_path: str = "checkpoints/ace_step",  # 사용자 환경에 맞게 수정 필요
+        checkpoint_path: str = "checkpoints/ace_step",
         bf16: bool = True,
         torch_compile: bool = False,
         device_id: int = 0,
