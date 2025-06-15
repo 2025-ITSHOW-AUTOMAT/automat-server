@@ -1,9 +1,11 @@
-from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
 from domain.shoot import photo
 from domain.song import createSong
 from domain.emotion.emotion import router as emotion
-from fastapi.middleware.cors import CORSMiddleware
+
 import os
 
 load_dotenv()
@@ -15,7 +17,7 @@ app.include_router(emotion, prefix="/emotion")
 
 @app.get("/")
 def hello():
-    return { "message" : "Hello Automat!" }
+    return {"message": "Hello Automat!"}
 
 app.add_middleware(
     CORSMiddleware,
