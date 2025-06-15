@@ -1,9 +1,8 @@
-from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from domain.shoot import photo
 from domain.song import createSong
-from fastapi.middleware.cors import CORSMiddleware
-import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -13,8 +12,7 @@ app.include_router(createSong.router, prefix="/song")
 
 @app.get("/")
 def hello():
-    return { "message" : "Hello Automat!" }
-
+    return {"message": "Hello Automat!"}
 
 app.add_middleware(
     CORSMiddleware,
