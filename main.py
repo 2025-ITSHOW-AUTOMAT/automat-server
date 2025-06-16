@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'domain', 'song', 'ACE_S
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
 from domain.shoot import photo
@@ -31,3 +32,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
