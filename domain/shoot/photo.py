@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List
 from datetime import datetime
 from domain.prompt.prompt import generate_prompt, prompt_openai
+from domain.prompt.translate import translate_prompt
 import base64
 import os
 
@@ -23,6 +24,7 @@ async def save_photos(req: ImageUploadRequest):
     saved_paths = []
     temp_paths = []
     prompts = []
+    translated_prompts = []
     BASE_URL = "http://automat.mirim-it-show.site:8080"
     
     try:
@@ -40,6 +42,9 @@ async def save_photos(req: ImageUploadRequest):
         for path in temp_paths:
             prompt = generate_prompt(path)
             prompts.append(prompt)
+            
+            translated = translate_prompt(prompt)
+            translated_prompts.append(translated)
 
         merged_prompt = " ".join(prompts)
         song_prompt = prompt_openai(merged_prompt)
@@ -50,7 +55,8 @@ async def save_photos(req: ImageUploadRequest):
     return {
         "saved_paths": saved_paths,
         "prompts": prompts,
-        "song_prompt": song_prompt
+        "song_prompt": song_prompt,
+        "translated_prompts": translated_prompts
     }
 
 def get_date(date: str) -> int:

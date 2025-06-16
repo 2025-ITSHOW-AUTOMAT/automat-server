@@ -22,8 +22,9 @@ RUN pip install --no-cache-dir "diffusers@git+https://github.com/huggingface/dif
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN git clone https://github.com/yourusername/your-repo.git /app/project
 
-EXPOSE 8080
+WORKDIR /app/project
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+
