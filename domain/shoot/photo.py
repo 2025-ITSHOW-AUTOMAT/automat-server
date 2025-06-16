@@ -23,6 +23,7 @@ async def save_photos(req: ImageUploadRequest):
     saved_paths = []
     temp_paths = []
     prompts = []
+    BASE_URL = "http://automat.mirim-it-show.site:8080"
     
     try:
         for i, base64_img in enumerate(req.images):
@@ -30,10 +31,10 @@ async def save_photos(req: ImageUploadRequest):
             img_data = base64.b64decode(encoded)
 
             filename = f"{date}_{experience_id}_{i+1}.png"
-            image_path = save_filename(img_data, UPLOAD_DIR, filename)
+            save_filename(img_data, UPLOAD_DIR, filename)
             temp_path = save_filename(img_data, TEMP_DIR, filename)
 
-            saved_paths.append(image_path)
+            saved_paths.append(f"{BASE_URL}/uploads/images/{filename}")
             temp_paths.append(temp_path)
 
         for path in temp_paths:
