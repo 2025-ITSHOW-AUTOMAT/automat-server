@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir "diffusers@git+https://github.com/huggingface/dif
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN git clone https://github.com/yourusername/your-repo.git /app/project
+RUN git clone https://github.com/2025-ITSHOW-AUTOMAT/automat-server.git /app/project
 
 WORKDIR /app/project
 
