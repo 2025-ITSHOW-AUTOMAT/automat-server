@@ -37,3 +37,5 @@ app.add_middleware(
 )
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'domain', 'song', 'ACE_Step'))

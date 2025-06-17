@@ -50,3 +50,4 @@ def generate_song(req: SongRequest):
     except Exception as e:
         print("generate_song error:", e)
         raise HTTPException(status_code=500, detail=str(e))
+

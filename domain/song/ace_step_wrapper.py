@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent / "ACE_Step" / "acestep"))
+
 import os
 import uuid
 from domain.song.ACE_Step.acestep.pipeline_ace_step import ACEStepPipeline
