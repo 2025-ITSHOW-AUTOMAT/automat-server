@@ -22,7 +22,7 @@ app.include_router(photo.router, prefix="/photo")
 app.include_router(createSong.router, prefix="/song")
 app.include_router(emotion, prefix="/emotion")
 app.include_router(album.router, prefix="/album")
-app.include_router(saveInfo.router, prefix="/album")
+app.include_router(saveInfo.router, prefix="/album/save-info")
 
 @app.get("/")
 def hello():
