@@ -7,6 +7,7 @@ import base64
 import asyncio
 import os
 import uuid
+from domain.utils.s3 import upload_s3
 
 router = APIRouter()
 
@@ -57,20 +58,30 @@ async def ws_emotion(websocket : WebSocket):
 
 @router.post("/upload")
 async def upload_cover(request: Request):
-    data = await request.json()
-    image_data = data.get("image")
+    try:
+        data = await request.json()
+        image_data = data.get("image")
+        if not image_data:
+            raise HTTPException(status_code=400, detail="이미지가 없습니다.")
 
-    # base64 디코딩
-    header, encoded = image_data.split(",", 1)
-    binary_data = base64.b64decode(encoded)
+        header, encoded = image_data.split(",", 1)
+        binary_data = base64.b64decode(encoded)
 
-    current_dir = os.path.dirname(__file__)
-    save_dir = os.path.abspath(os.path.join(current_dir, "../..", "uploads/coverImage"))
-    os.makedirs(save_dir, exist_ok=True)
+        filename = f"{uuid.uuid4().hex[:8]}.png"
+        save_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..", "uploads/coverImage"))
+        os.makedirs(save_dir, exist_ok=True)
+        save_path = os.path.join(save_dir, filename)
 
-    save_path = os.path.join(save_dir, f"{uuid.uuid4().hex[:8]}.png")
+        with open(save_path, "wb") as f:
+            f.write(binary_data)
 
-    with open(save_path, "wb") as f:
-        f.write(binary_data)
+        s3_key = f"coverImage/{filename}"
+        s3_url = upload_s3(save_path, s3_key)
 
-    return {"message": "커버 저장 성공", "path": save_path}
+        return {
+            "message": "커버 저장 성공",
+            "s3_url": s3_url
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"업로드 실패: {str(e)}")

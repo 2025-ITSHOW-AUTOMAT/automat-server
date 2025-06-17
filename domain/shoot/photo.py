@@ -1,9 +1,11 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
 from domain.prompt.prompt import generate_prompt, prompt_openai
 from domain.prompt.translate import translate_prompt
+from domain.utils.s3 import upload_s3
+from domain.utils.cleanup import clean_temp_dir
 import base64
 import os
 
@@ -22,10 +24,10 @@ async def save_photos(req: ImageUploadRequest):
     date = datetime.now().strftime("%Y%m%d")
     experience_id = get_date(date)
     saved_paths = []
+    saved_s3_urls = []
     temp_paths = []
     prompts = []
     translated_prompts = []
-    BASE_URL = "http://automat.mirim-it-show.site:8080"
     
     try:
         for i, base64_img in enumerate(req.images):
@@ -33,10 +35,17 @@ async def save_photos(req: ImageUploadRequest):
             img_data = base64.b64decode(encoded)
 
             filename = f"{date}_{experience_id}_{i+1}.png"
-            save_filename(img_data, UPLOAD_DIR, filename)
+            
+            image_path = save_filename(img_data, UPLOAD_DIR, filename)
             temp_path = save_filename(img_data, TEMP_DIR, filename)
 
-            saved_paths.append(f"{BASE_URL}/uploads/images/{filename}")
+            clean_temp_dir()
+
+            s3_key = f"images/{filename}"
+            s3_url = upload_s3(image_path, s3_key)
+
+            saved_paths.append(image_path)
+            saved_s3_urls.append(s3_url)
             temp_paths.append(temp_path)
 
         for path in temp_paths:
@@ -54,6 +63,7 @@ async def save_photos(req: ImageUploadRequest):
 
     return {
         "saved_paths": saved_paths,
+        "s3_urls": saved_s3_urls,
         "prompts": prompts,
         "song_prompt": song_prompt,
         "translated_prompts": translated_prompts
@@ -68,3 +78,11 @@ def save_filename(data: bytes, folder: str, filename: str) -> str:
     with open(path, "wb") as f:
         f.write(data)
     return path
+
+def clean_temp_dir(temp_dir: str = TEMP_DIR, keep: int = 3):
+    files = sorted(
+        [os.path.join(temp_dir, f) for f in os.listdir(temp_dir)],
+        key=os.path.getctime
+    )
+    for file_path in files[:-keep]:
+        os.remove(file_path)

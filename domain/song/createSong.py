@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from domain.prompt.prompt import prompt_openai
 from domain.song.ace_step_wrapper import ACEWrapper
-from domain.song.utils.saveSong import song_path, save_song
-from domain.song.utils.s3 import upload_s3
+from domain.utils.saveSong import song_path, save_song
+from domain.utils.s3 import upload_s3
 
 import os
 
