@@ -13,9 +13,9 @@ wrapper = ACEWrapper()
 class SongRequest(BaseModel):
     song_prompt: list[str]
     duration_sec: float = 60.0
-    lora_path: str | None = None
-    lora_weight: float = 1.0
-    infer_steps: int = 100
+    # lora_path: str | None = None
+    # lora_weight: float = 1.0
+    # infer_steps: int = 100
 
 @router.post("/generate")
 def generate_song(req: SongRequest):
@@ -25,12 +25,8 @@ def generate_song(req: SongRequest):
 
         result = wrapper.generate(
             prompt=prompt,
-            lyrics="",
             duration=req.duration_sec,
             save_path=save_path,
-            lora_path=req.lora_path,
-            lora_weight=req.lora_weight,
-            infer_steps=req.infer_steps
         )
 
         audio_local = result["audio_path"]
