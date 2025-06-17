@@ -44,7 +44,8 @@ def generate_song(req: SongRequest):
             "message": "성공적으로 생성 완료",
             "song_id": song_id,
             "song_url": s3_audio_url,
-            "metadata_url": s3_metadata_url
+            "metadata_url": s3_metadata_url,
+            "filename": os.path.basename(audio_local)
         }
 
     except Exception as e:

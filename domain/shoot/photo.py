@@ -27,7 +27,7 @@ async def save_photos(req: ImageUploadRequest):
     saved_s3_urls = []
     temp_paths = []
     prompts = []
-    translated_prompts = []
+    translate_prompts = []
     
     try:
         for i, base64_img in enumerate(req.images):
@@ -54,7 +54,7 @@ async def save_photos(req: ImageUploadRequest):
             prompts.append(prompt)
             
             translated = translate_prompt(prompt)
-            translated_prompts.append(translated)
+            translate_prompts.append(translated)
 
         merged_prompt = " ".join(prompts)
         song_prompt = prompt_openai(merged_prompt)
@@ -67,7 +67,7 @@ async def save_photos(req: ImageUploadRequest):
         "s3_urls": saved_s3_urls,
         "prompts": prompts,
         "song_prompt": song_prompt,
-        "translated_prompts": translated_prompts
+        "translate_prompts": translate_prompts
     }
 
 def get_date(date: str) -> int:

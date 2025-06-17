@@ -18,6 +18,8 @@ domain/song/ACE_Step
 
 venv/
 
-3206_keypair.pem
+3206_keypair_2.pem
 
 Dockerfile
+
+checkpoints/

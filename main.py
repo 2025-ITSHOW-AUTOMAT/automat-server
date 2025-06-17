@@ -22,7 +22,7 @@ app.include_router(photo.router, prefix="/photo")
 app.include_router(createSong.router, prefix="/song")
 app.include_router(emotion, prefix="/emotion")
 app.include_router(album.router, prefix="/album")
-app.include_router(saveInfo.router, prefix="/album/save-info")
+app.include_router(saveInfo.router, prefix="/album/save")
 
 @app.get("/")
 def hello():
@@ -37,5 +37,4 @@ app.add_middleware(
 )
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-
 sys.path.append(os.path.join(os.path.dirname(__file__), 'domain', 'song', 'ACE_Step'))

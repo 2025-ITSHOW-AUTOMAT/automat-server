@@ -12,7 +12,7 @@ class SaveInfoRequest(BaseModel):
     image_path: str
     song_path: str
 
-@router.post("/save-info")
+@router.post("/info")
 def save_info(req: SaveInfoRequest):
     try:
         conn = psycopg2.connect(settings.DATABASE_URL)
