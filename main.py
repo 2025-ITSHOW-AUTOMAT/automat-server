@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from domain.shoot import photo
 from domain.song import createSong
 from domain.emotion.emotion import router as emotion
+from domain.album import album
 
 import os
 
@@ -20,6 +21,7 @@ app = FastAPI()
 app.include_router(photo.router, prefix="/photo")
 app.include_router(createSong.router, prefix="/song")
 app.include_router(emotion, prefix="/emotion")
+app.include_router(album.router, prefix="/album")
 
 @app.get("/")
 def hello():
