@@ -85,12 +85,12 @@ def generate_song_prompt(image_paths: list[str] = Body(...)):
     try:
         base_prompts = [generate_prompt(p) for p in image_paths]
         song_prompts = prompt_openai(base_prompts)
-        translated_prompts = [translate_prompt(p) for p in song_prompts]
+        translate_prompts = [translate_prompt(p) for p in song_prompts]
 
         return {
             "base_prompts": base_prompts,
             "song_prompts": song_prompts,
-            "translated_prompts": translated_prompts
+            "translate_prompts": translate_prompts
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

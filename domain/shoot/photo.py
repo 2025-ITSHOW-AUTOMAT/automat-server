@@ -39,7 +39,6 @@ async def save_photos(req: ImageUploadRequest):
             image_path = save_filename(img_data, UPLOAD_DIR, filename)
             temp_path = save_filename(img_data, TEMP_DIR, filename)
 
-            clean_temp_dir()
 
             s3_key = f"images/{filename}"
             s3_url = upload_s3(image_path, s3_key)
@@ -47,6 +46,8 @@ async def save_photos(req: ImageUploadRequest):
             saved_paths.append(image_path)
             saved_s3_urls.append(s3_url)
             temp_paths.append(temp_path)
+
+        clean_temp_dir()
 
         for path in temp_paths:
             prompt = generate_prompt(path)

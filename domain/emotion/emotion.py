@@ -1,5 +1,5 @@
 from typing import final
-from fastapi import APIRouter, WebSocket, Request
+from fastapi import APIRouter, WebSocket, Request,APIRouter, HTTPException
 from deepface import DeepFace
 import numpy as np
 import cv2
