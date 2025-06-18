@@ -14,8 +14,8 @@ init.sql
 cmd.txt
 path.js
 
-domain/song/ACE_Step
-domain/song/ACE_Step/
+# domain/song/ACE_Step
+# domain/song/ACE_Step/
 
 venv/
 

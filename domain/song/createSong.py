@@ -16,7 +16,7 @@ class SongRequest(BaseModel):
     duration_sec: float = 60.0
     lora_path: str | None = None
     lora_weight: float = 1.0
-    infer_steps: int = 100
+    infer_steps: int = 60
 
 @router.post("/generate")
 def generate_song(req: SongRequest):

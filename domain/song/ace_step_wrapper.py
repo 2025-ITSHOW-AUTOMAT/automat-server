@@ -30,7 +30,7 @@ class ACEWrapper:
         lyrics: str = "",
         duration: float = 45.0,
         save_path: str | None = None,
-        infer_steps: int = 100
+        infer_steps: int = 60
     ) -> dict:
         scheduler_type = "ddim"
         cfg_type = "cfg"
