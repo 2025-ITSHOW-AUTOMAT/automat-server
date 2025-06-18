@@ -66,16 +66,6 @@ def prompt_openai(base_prompts: list):
 
     return song_prompts
 
-# def prompt_openai(base_prompts: list): # 테스트용 코드(나중에 지울 것)
-#     song_prompt = [
-#         "lo-fi hip hop style music, A joyful and uplifting lo-fi beat capturing the innocence and fun of childhood.",
-#         "lo-fi hip hop style music, A soothing ambient track with gentle synths and soft piano, evoking peace and reflection.",
-#         "lo-fi hip hop style music, A dark and moody electronic tune with pulsing bass, reflecting solitude and tension."
-#     ]
-    
-#     return song_prompt
-
-
 @router.post("/generate/song_prompt")
 def generate_song_prompt(image_paths: list[str] = Body(...)):
     for image_path in image_paths:

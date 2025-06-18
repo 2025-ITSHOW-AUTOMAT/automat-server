@@ -29,7 +29,4 @@ def translate_prompt(prompt: str) -> str:
 
     except Exception as e:
         print(f"[번역 실패] {e}")
-        return prompt  # 실패 시 원문 그대로 반환
-
-# def translate_prompt(prompt: str) -> str:
-#     return f"[번역된] {prompt}"
+        return prompt
