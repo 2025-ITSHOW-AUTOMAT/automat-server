@@ -6,6 +6,7 @@ from domain.utils.saveSong import song_path, save_song
 from domain.utils.s3 import upload_s3
 
 import os
+import traceback
 
 router = APIRouter()
 wrapper = ACEWrapper()
@@ -49,6 +50,6 @@ def generate_song(req: SongRequest):
         }
 
     except Exception as e:
-        print("generate_song error:", e)
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
