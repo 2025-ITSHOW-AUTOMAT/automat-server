@@ -28,52 +28,52 @@ def generate_prompt(image_path) -> str:
     prompt = f"A {emotion} scene: {caption}."
     return prompt
 
-# def prompt_openai(base_prompts: list):
-#     song_prompts = []
+def prompt_openai(base_prompts: list):
+    song_prompts = []
     
-#     system_message = "You generate music prompts with genre suggestions."
-#     for base_prompt in base_prompts:
-#         user_message = (
-#             f"Based on the following descriptions, create a song prompt that reflects the mood, atmosphere, and situation. "
-#             f"Also, specify the song genre at the end.\n\nDescriptions: {base_prompt}"
-#         )
-#         response = client.chat.completions.create(
-#             model="gpt-4o-mini",
-#             messages=[
-#                 {"role": "system", "content": system_message},
-#                 {"role": "user", "content": user_message}
-#             ],
-#             max_tokens=110,
-#             temperature=0.7,
-#         )
-#         content = response.choices[0].message.content.strip()
+    system_message = "You generate music prompts with genre suggestions."
+    for base_prompt in base_prompts:
+        user_message = (
+            f"Based on the following descriptions, create a song prompt that reflects the mood, atmosphere, and situation. "
+            f"Also, specify the song genre at the end.\n\nDescriptions: {base_prompt}"
+        )
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=110,
+            temperature=0.7,
+        )
+        content = response.choices[0].message.content.strip()
 
-#         song_genre = None
-#         if "song_genre:" in content.lower():
-#             parts = content.lower().split("song_genre:")
-#             song_genre = parts[1].strip()
-#             song_prompt = parts[0].strip()
-#         else:
-#             song_prompt = content
-#             song_genre = None
+        song_genre = None
+        if "song_genre:" in content.lower():
+            parts = content.lower().split("song_genre:")
+            song_genre = parts[1].strip()
+            song_prompt = parts[0].strip()
+        else:
+            song_prompt = content
+            song_genre = None
 
-#         if song_genre:
-#             full_prompt = f"{song_genre} style music, {song_prompt}"
-#         else:
-#             full_prompt = song_prompt
+        if song_genre:
+            full_prompt = f"{song_genre} style music, {song_prompt}"
+        else:
+            full_prompt = song_prompt
         
-#         song_prompts.append(full_prompt)
+        song_prompts.append(full_prompt)
 
-#     return song_prompts
+    return song_prompts
 
-def prompt_openai(base_prompts: list): # 테스트용 코드(나중에 지울 것)
-    song_prompt = [
-        "lo-fi hip hop style music, A joyful and uplifting lo-fi beat capturing the innocence and fun of childhood.",
-        "lo-fi hip hop style music, A soothing ambient track with gentle synths and soft piano, evoking peace and reflection.",
-        "lo-fi hip hop style music, A dark and moody electronic tune with pulsing bass, reflecting solitude and tension."
-    ]
+# def prompt_openai(base_prompts: list): # 테스트용 코드(나중에 지울 것)
+#     song_prompt = [
+#         "lo-fi hip hop style music, A joyful and uplifting lo-fi beat capturing the innocence and fun of childhood.",
+#         "lo-fi hip hop style music, A soothing ambient track with gentle synths and soft piano, evoking peace and reflection.",
+#         "lo-fi hip hop style music, A dark and moody electronic tune with pulsing bass, reflecting solitude and tension."
+#     ]
     
-    return song_prompt
+#     return song_prompt
 
 
 @router.post("/generate/song_prompt")
