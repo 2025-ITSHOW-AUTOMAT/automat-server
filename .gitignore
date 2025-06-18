@@ -15,11 +15,13 @@ cmd.txt
 path.js
 
 domain/song/ACE_Step
+domain/song/ACE_Step/
 
 venv/
 
-3206_keypair_2.pem
+3206_keypair_a.pem
 
 Dockerfile
 
 checkpoints/
+
