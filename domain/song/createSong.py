@@ -12,7 +12,7 @@ router = APIRouter()
 wrapper = ACEWrapper()
 
 class SongRequest(BaseModel):
-    song_prompt: list[str]
+    song_prompt: str
     duration_sec: float = 60.0
     lora_path: str | None = None
     lora_weight: float = 1.0

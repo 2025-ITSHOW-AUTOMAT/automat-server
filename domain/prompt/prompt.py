@@ -81,8 +81,9 @@ def generate_song_prompt(image_paths: list[str] = Body(...)):
 
     try:
         base_prompts = [generate_prompt(p) for p in image_paths]
-        song_prompts = prompt_openai(base_prompts)
-        translate_prompts = [translate_prompt(p) for p in song_prompts]
+        combined_prompt = " ".join(base_prompts)
+        song_prompts = prompt_openai([combined_prompt])
+        translate_prompts = [translate_prompt(p) for p in base_prompts]
 
         return {
             "base_prompts": base_prompts,
