@@ -13,7 +13,7 @@ class Album(Base):
     __tablename__ = "album"
     id = Column(Integer, primary_key=True, index=True)
     song_path = Column(Text, nullable=False)
-    # title = Column(String(50), nullable=False)
+    title = Column(String(50), nullable=False)
     user_name = Column(String(20), nullable=False)
     description = Column(Text, nullable=False)
     image_path = Column(Text, nullable=False)

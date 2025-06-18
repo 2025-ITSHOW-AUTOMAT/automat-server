@@ -10,17 +10,17 @@ def read_albums():
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT id, song_path, user_name, description, image_path FROM album ORDER BY id DESC")
+        cursor.execute("SELECT id, song_path, title, user_name, description, image_path FROM album ORDER BY id DESC")
         rows = cursor.fetchall()
         albums = []
         for row in rows:
             albums.append(Album(
                 id=row[0],
                 song_path=row[1],
-                # title=row[2],
-                user_name=row[2],
-                description=row[3],
-                image_path=row[4],
+                title=row[2],
+                user_name=row[3],
+                description=row[4],
+                image_path=row[5],
             ))
         return albums
     finally:
@@ -33,7 +33,7 @@ def read_album(album_id: int):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "SELECT id, song_path, user_name, description, image_path FROM album WHERE id = %s",
+            "SELECT id, song_path, title, user_name, description, image_path FROM album WHERE id = %s",
             (album_id,)
         )
         row = cursor.fetchone()
@@ -42,9 +42,10 @@ def read_album(album_id: int):
         album = Album(
             id=row[0],
             song_path=row[1],
-            user_name=row[2],
-            description=row[3],
-            image_path=row[4],
+            title=row[2],
+            user_name=row[3],
+            description=row[4],
+            image_path=row[5],
         )
         return album
     finally:
