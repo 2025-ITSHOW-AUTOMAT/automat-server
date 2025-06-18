@@ -29,13 +29,19 @@ def generate_prompt(image_path) -> str:
     return prompt
 
 def prompt_openai(base_prompts: list):
-    song_prompts = []
+    final = []
+    genres = []
     
-    system_message = "You generate music prompts with genre suggestions."
+    system_message = (
+        "You are a creative assistant that generates very short, concise song prompts "
+        "based on image descriptions. Each prompt should be one sentence and include a fitting music genre."
+    )
+    
     for base_prompt in base_prompts:
         user_message = (
-            f"Based on the following descriptions, create a song prompt that reflects the mood, atmosphere, and situation. "
-            f"Also, specify the song genre at the end.\n\nDescriptions: {base_prompt}"
+            f"Write a short, one-line song prompt (max 20 words) based on the following description, "
+            f"and include a suitable genre at the beginning. Keep it concise and creative.\n\n"
+            f"Description: {base_prompt}"
         )
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -43,26 +49,27 @@ def prompt_openai(base_prompts: list):
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message}
             ],
-            max_tokens=110,
-            temperature=0.7,
+            max_tokens=60,
+            temperature=0.8,
         )
         content = response.choices[0].message.content.strip()
 
-        song_genre = None
-        if "song_genre:" in content.lower():
-            parts = content.lower().split("song_genre:")
-            song_genre = parts[1].strip()
-            song_prompt = parts[0].strip()
+        if ":" in content:
+            genre, prompt = content.split(":", 1)
+            genre = genre.strip().lower()
+            prompt = prompt.strip()
         else:
-            song_prompt = content
-            song_genre = None
+            genre = "unknown"
+            prompt = content.strip()
 
-        if song_genre:
-            full_prompt = f"{song_genre} style music, {song_prompt}"
-        else:
-            full_prompt = song_prompt
-        
-        song_prompts.append(full_prompt)
+        genres.append(genre)
+        final.append((genre, prompt))
+
+    most_common_genre = Counter(genres).most_common(1)[0][0]
+
+    song_prompts = [
+        f"{most_common_genre} style music, {prompt}" for _, prompt in final
+    ]
 
     return song_prompts
 
