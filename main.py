@@ -14,12 +14,14 @@ from domain.song.createSong import router as createSong
 from domain.emotion.emotion import router as emotion
 from domain.album.album import router as album
 from domain.album.saveInfo import router as saveInfo
+from domain.prompt.prompt import router as prompt
 import os
 
 load_dotenv()
 
 app = FastAPI()
 app.include_router(photo, prefix="/photo")
+app.include_router(prompt, prefix="/prompt")
 app.include_router(createSong, prefix="/song")
 app.include_router(emotion, prefix="/emotion")
 app.include_router(album, prefix="/album")

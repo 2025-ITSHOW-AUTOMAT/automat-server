@@ -13,7 +13,7 @@ def translate_prompt(prompt: str) -> str:
             messages=[
                 {
                     "role": "system",
-                    "content": "Translate the following English text into natural Korean for user display."
+                    "content": "Translate the following English text into a natural, listener-friendly Korean sentence, as if describing the mood or story of a song to a music listener."
                 },
                 {
                     "role": "user",
