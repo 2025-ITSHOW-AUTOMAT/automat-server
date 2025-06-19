@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
-from domain.prompt.prompt import generate_prompt, prompt_openai
+from domain.prompt.prompt import generate_prompt
 from domain.prompt.translate import translate_prompt
 from domain.utils.s3 import upload_s3
 from domain.utils.cleanup import clean_temp_dir
@@ -57,7 +57,7 @@ async def save_photos(req: ImageUploadRequest):
             translate_prompts.append(translated)
 
         merged_prompt = " ".join(prompts)
-        song_prompt = prompt_openai(merged_prompt)
+        song_prompt = merged_prompt
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from domain.prompt.prompt import prompt_openai
 from domain.song.ace_step_wrapper import ACEWrapper
 from domain.utils.saveSong import song_path, save_song
 from domain.utils.s3 import upload_s3
@@ -21,7 +20,7 @@ class SongRequest(BaseModel):
 @router.post("/generate")
 def generate_song(req: SongRequest):
     try:
-        prompt = prompt_openai(req.song_prompt)
+        prompt = req.song_prompt
         save_path = song_path()
 
         result = wrapper.generate(
