@@ -6,7 +6,6 @@ from domain.prompt.prompt import generate_prompt
 from domain.prompt.translate import translate_prompt
 from domain.utils.s3 import upload_s3
 from domain.utils.cleanup import clean_temp_dir
-from domain.utils.sendPod import send_runpod
 import base64
 import os
 
@@ -27,7 +26,8 @@ async def save_photos(req: ImageUploadRequest):
     saved_paths = []
     saved_s3_urls = []
     temp_paths = []
-    # prompts = []
+    prompts = []
+    translate_prompts = []
     
     try:
         for i, base64_img in enumerate(req.images):
@@ -49,14 +49,25 @@ async def save_photos(req: ImageUploadRequest):
 
         clean_temp_dir()
 
+        for path in temp_paths:
+            prompt = generate_prompt(path)
+            prompts.append(prompt)
+            
+            translated = translate_prompt(prompt)
+            translate_prompts.append(translated)
+
+        merged_prompt = " ".join(prompts)
+        song_prompt = merged_prompt
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    # runpod_result = send_runpod(temp_paths)
-
     return {
         "saved_paths": saved_paths,
-        "s3_urls": saved_s3_urls
+        "s3_urls": saved_s3_urls,
+        "prompts": prompts,
+        "song_prompt": song_prompt,
+        "translate_prompts": translate_prompts
     }
 
 def get_date(date: str) -> int:
