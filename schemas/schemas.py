@@ -11,7 +11,7 @@ from typing import Optional
 class Album(BaseModel):
     id: int
     song_path: str
-    # title: str
+    title: str
     user_name: str
     description: str
     image_path: str
